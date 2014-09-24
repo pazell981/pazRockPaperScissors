@@ -49,7 +49,7 @@ module.exports = function Route(app){
   })
   
   app.io.route('play', function (req){
-    if (room[req.data.room].player2==0){
+    if (room[req.data.room][player2]==0){
       compplay = cplay[(Math.random(2)+1)];
       console.log(compplay);
       req.io.room(req.data.room).broadcast('round', compplay)
