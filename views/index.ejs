@@ -63,6 +63,8 @@
 								$('#challenge').hide();
 		  					$('#game').show();
 								io.emit('accepted', room)
+							} else {
+								io.emit('denied', room)
 							}
 						}
 					});
@@ -126,6 +128,20 @@
 								round++;
 						}
 					}
+				// 5. user quits
+					$("#quit").click(function (){
+						quit = {room: room_id}
+						io.emit('play', quit)
+						$('#game').hide();
+						$('#challenge').show();		
+					})
+
+					io.on("user_quit", function (){
+						var room_id='';
+						$('#game').hide();
+						$('#challenge').show();		
+					})
+
 				// 6. user disconnects, user's chatbox fades out
 		  		io.on('user_disconnect', function(user){
 		  			$( "#"+user.user_id).fadeOut(1500, function(){
@@ -167,6 +183,9 @@
 				  		</table>
 			  	</div>
 			  	<div id='game'>
+			  		<div id='quit'>
+			  			<button id='quit'>Quit</button>
+			  		</div>
 			  		<div id='gameplay'>
 				  		<div id='opponent_window'>
 				  			<h4 id='opponent' class='opponent'></h4>
