@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/socket.io/socket.io.js"></script>
+		<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+		<script>
+			$(document).ready(function(){
+				var user_id='';
+				var user_name='';
+				var room_id='';
+				var play={play:''};
+				var opp_play=null;
+				var opponent='';
+				var round=1;
+				var status='';
+				$('#challenge, #game, #wait').hide();
+				// 1. user connects, prompted for name, entry disappears
+				io = io.connect();
+				$('#registration').submit(function(){
+		  			io.emit('user_connect', {
+		  				name: $('#user').val(),
+		  			});
+		  			$('#entry').hide()
+		  			return false
+		  		});
+				//2. user added, challenge screen shown
+				io.on('user_added', function(user) {
+					$('#challenge').show()
+					for(var i in user.users_connected){
+						user_id=user.users_connected[i].user_id;
+						user_name=user.users_connected[i].name;
+						$( "#chalbox" ).last().append("<tr id=" + user_id + "><td>" + user_name + "</td><td><form><input type='hidden' class='user' value='"+user.name+"'><input class='against' type='hidden' value='"+user_id+"'><input type='button' class='submit' value='Challenge'></form></td></tr>");
+					}
+					$(".hidden_user_name").val(user.name)
+					user_id=user.user_id;
+					user_name=user.name;
+				});
+				// 3. new user's info broadcasted their name fades in
+				io.on('new_user_added', function(user) {
+						$( "#chalbox" ).append("<tr id=" + user.user_id + "><td>" + user.name + "</td><td><form><input type='hidden' class='user' value='"+user_name+"'><input type='hidden' class='against' value='"+user.user_id+"'><input type='button' value='Challenge'></form></td></tr>");
+						$("#"+user.user_id).hide();
+						$("#"+user.user_id).fadeIn(1500);
+					});
+				// 4. user submits challenge, challenge presents opponent with alert
+					$(document).on('click','.submit',function(){
+		  			io.emit('issue_challenge', {
+		  				player1: user_id, 
+		  				player2: $(this).parent().find(".against").val()
+		  			});
+		  			var room={player1: user_id, player2: $(this).parent().find(".against").val()};
+		  			io.emit('accepted', room);
+		  			$('#challenge').hide();
+		  			$('#game').show();
+		  			return false;
+		  		});
+					io.on('challenge', function(challenge) {
+						if (user_id == challenge.player2){
+							gametime = confirm(challenge.player1_name + " has challenged you!!!")
+							if (gametime){
+								var room={player1: challenge.player1, player2: challenge.player2};
+								$('#challenge').hide();
+		  					$('#game').show();
+								io.emit('accepted', room)
+							}
+						}
+					});
+				// 5. users enter game, game play begins
+					io.on('room_create',function(room){
+						room_id = room.room_id
+						if (user_id == room.player1.user_id) {
+							opponent = room.player2.name;
+						} else {
+							opponent = room.player1.name;
+						}
+						$('.opponent').html(opponent)
+					})
+					$(".play").click(function(){
+						play = {room: room_id, play: $(this).attr('id')}
+						$(".play_buttons").hide()
+						$("#your_play").html(play.play)
+						io.emit('play', play)
+						Status();
+					})
+					io.on('round',function(rec_play){
+						opp_play = rec_play
+						$('#wait').show();
+						opp_play = rec_play
+						Status();
+					})
+					function Status(){
+						if(play.play!='' && opp_play!=null){
+							console.log('check has begun')
+							if(play.play=='Rock'){
+									if(opp_play=='Paper'){
+										status = "Round " + round + ": " + opponent + " wins!";
+									} else if (opp_play=='Scissors'){
+										status = "Round " + round + ": " + user_name + " wins!";
+									} else {
+										status = "Round " + round + ": Is a tie!"
+									}
+								} else if (play.play=='Paper'){
+									if(opp_play=='Scissors'){
+										status = "Round " + round + ": " + opponent + " wins!";
+									} else if (opp_play=='Rock'){
+										status = "Round " + round + ": " + user_name + " wins!";
+									} else {
+										status = "Round " + round + ": Is a tie!"
+									}
+								} else if (play.play=='Scissors'){
+									if(opp_play=='Rock'){
+										status = "Round " + round + ": " + opponent + " wins!";
+									} else if (opp_play=='Paper'){
+										status = "Round " + round + ": " + user_name + " wins!";
+									} else {
+										status = "Round " + round + ": Is a tie!"
+									}
+								}
+								play = {};
+								opp_play = null;
+								$('#wait').hide();
+								$('.play_buttons').show();
+								$("#your_play, #opponent_play").html('')
+								$('#results').append("<p>"+status+"</p>");
+								round++;
+						}
+					}
+				// 6. user disconnects, user's chatbox fades out
+		  		io.on('user_disconnect', function(user){
+		  			$( "#"+user.user_id).fadeOut(1500, function(){
+		  				$( "#"+user.user_id).remove();
+		  			});
+		  		})
+				});
+
+		</script>
+  </head>
+  <body>
+  	<div id='wrapper'>
+  		<div id='container'>
+  			<div id='title'>
+			    <h1><%= title %></h1>
+			    <p id='status'></p>
+			  </div>
+			  <div id='body'>
+			  	<fieldset id="entry">
+				  	<legend>
+				  		<h4>Are you ready for the challenge?</h4>
+				  	</legend>
+				  	<form id='registration'>
+				  		<label>Enter your Name:
+				  		<input type='text' id='user' name='name' placeholder='Your Name'></label>
+				  		<input type='submit' value='Go!'>
+				  	</form>
+			  	</fieldset>
+			  	<div id='challenge'>
+			  		<h3>Get ready for the challenge</h3>
+				  		<table>
+				  			<thead>
+				  				<th>Name</th>
+				  				<th>Action</th>
+				  			</thead>
+				  			<tbody id='chalbox'>
+
+				  			</tbody>
+				  		</table>
+			  	</div>
+			  	<div id='game'>
+			  		<div id='gameplay'>
+				  		<div id='opponent_window'>
+				  			<h4 id='opponent' class='opponent'></h4>
+				  			<h1 id='opponent_play'></h1>
+				  			<div class='play_buttons'>
+				  				<p id='wait'><span class='opponent'></span> has decided their play.</p>
+				  			</div>
+				  		</div>
+				  		<div id='vs'>
+				  			<h1>VS.</h1>
+				  		</div>
+				  		<div id='your_window'>
+				  			<h4 id='you'>You:</h4>
+				  			<h1 id='your_play'></h1>
+				  			<div class='play_buttons'>
+				  				<p>Choose your play:</p>
+					  			<button class='play' id='Rock'>Rock</button>
+					  			<button class='play' id='Paper'>Paper</button>
+					  			<button class='play' id='Scissors'>Scissors</button>
+					  		</div>
+				  		</div>
+						</div>
+						<div id='results'>
+
+						</div>
+			  	</div>
+			  </div>
+			</div>
+		</div>
+  </body>
+</html>

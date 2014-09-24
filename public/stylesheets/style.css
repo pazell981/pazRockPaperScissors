@@ -1,0 +1,128 @@
+*{
+	margin: 0px;
+	padding: 0px;
+}
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+fieldset {
+	width: 400px;
+	height: 300px;
+	margin: 50px auto;
+	padding: 20px;
+}
+
+table {
+	width: 400px;
+	margin: 50px auto;
+	border-collapse: collapse;
+	border: 2px solid black;
+}
+
+th {
+	width: 200px;
+	border: 1px solid black;
+}
+
+td {
+	width: 200px;
+	border: 1px solid black;
+}
+
+.play_buttons {
+	height: 20px;
+	margin: 10px 15px;
+}
+
+#container {
+	width: 1000px;
+	margin: 0px auto;
+}
+
+#opponent_window {
+	display: inline-block;
+	width: 300px;
+	height: 200px;
+	margin-left: 25px;
+	vertical-align: top;
+	border: 1px solid black;
+}
+
+#vs {
+	display: inline-block;
+	width: 300px;
+	height: 200px;
+	vertical-align: top;
+}
+
+#your_window {
+	display: inline-block;
+	width: 300px;
+	height: 200px;
+	margin-right: 25px;
+	vertical-align: top;
+	border: 1px solid black;
+}
+
+#opponent {
+	height: 20px;
+	border-bottom: 1px solid black;
+	margin: 0px;
+	padding: 15px;
+}
+
+#you {
+	height: 20px;
+	border-bottom: 1px solid black;
+	margin: 0px;
+	padding: 15px;
+}
+
+#opponent_play {
+	height: 60px;
+	border-bottom: 1px solid black;
+	padding: 15px;
+	margin-bottom: 5px;
+	text-align: center;
+}
+
+#your_play {
+	height: 60px;
+	border-bottom: 1px solid black;
+	padding: 15px;
+	margin-bottom: 5px;
+	text-align: center;
+}
+
+#results {
+	height: 300px;
+	width: 600px;
+	margin: 25px auto;
+	padding: 10px;
+	border: 1px solid black;
+}
+
+#entry form {
+	padding: 50px;
+}
+
+#entry label {
+	display: block;
+}
+
+#entry input[type='submit'] {
+	margin-left: 220px;
+	padding: 10px 20px;
+}
+
+#vs h1 {
+	height: 200px;
+	margin: 83px 0px;
+	text-align: center;
+}
