@@ -121,6 +121,11 @@ td {
 	padding: 10px 20px;
 }
 
+#quit{
+	position: absolute;
+	left: 0px;
+}
+
 #vs h1 {
 	height: 200px;
 	margin: 83px 0px;

@@ -1,7 +1,7 @@
 module.exports = function Route(app){
 
   app.get('/', function (req, res){
-    res.render('index', {title:'Rock, Paper Scissors Game'});
+    res.render('index', {title:'Rock, Paper, Scissors Game'});
   });
 
   users = {};
