@@ -36,15 +36,15 @@ module.exports = function Route(app){
       app.io.room(req.data.player1).broadcast('room_create', room)
     } else {
       req.io.join(req.data.player2)
-      room[eq.data.player2] = {room_id: req.data.player2, player1: users[req.data.player1], player2: users[req.data.player2]}
+      room[req.data.player2] = {room_id: req.data.player2, player1: users[req.data.player1], player2: users[req.data.player2]}
       console.log('room', room);
       app.io.room(req.data.player2).broadcast('room_create', room)
     }
   })
 
   app.io.route('denied', function (req){
-    room[eq.data.player2] = {room_id: req.data.player2, player1: users[req.data.player1], player2: users[req.data.player2]};
-    delete room[eq.data.player2];
+    room[req.data.player2] = {room_id: req.data.player2, player1: users[req.data.player1], player2: users[req.data.player2]};
+    delete room[req.data.player2];
     app.io.room(req.data.player2).broadcast('denied', room);
   })
   
