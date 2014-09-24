@@ -31,7 +31,7 @@ module.exports = function Route(app){
   app.io.route('accepted', function (req){
     if (req.data.player2==0){
       req.io.join(req.data.player1)
-      room[eq.data.player1] = {room_id: req.data.player1, player1: users[req.data.player1], player2: users[req.data.player2]}
+      room[req.data.player1] = {room_id: req.data.player1, player1: users[req.data.player1], player2: users[req.data.player2]}
       console.log('room', room);
       app.io.room(req.data.player1).broadcast('room_create', room)
     } else {
