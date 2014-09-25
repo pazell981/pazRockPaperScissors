@@ -50,7 +50,9 @@
 		  				player2: $(this).parent().find(".against").val()
 		  			});
 		  			var room={player1: user_id, player2: $(this).parent().find(".against").val()};
-		  			io.emit('accepted', room);
+		  			if (room.player2!=0){
+		  				io.emit('accepted', room);
+		  			}
 		  			$('#challenge').hide();
 		  			$('#game').show();
 		  			return false;
@@ -64,13 +66,18 @@
 		  					$('#game').show();
 								io.emit('accepted', room)
 							} else {
-								io.emit('denied', room)
+								var room={player1: challenge.player1, player2: challenge.player2};
+								io.emit('invite_denied', room)
 							}
 						}
 					});
+					io.on('denied', function (room){
+						$('#game').hide();
+						$('#challenge').show();		
+					})
 				// 5. users enter game, game play begins
-					io.on('room_create',function(room){
-						room_id = room.room_id
+					io.on('room_create',function (room){
+						room_id = room.room_id;
 						if (user_id == room.player1.user_id) {
 							opponent = room.player2.name;
 						} else {
@@ -86,9 +93,9 @@
 						Status();
 					})
 					io.on('round',function(rec_play){
+						console.log(rec_play)
 						opp_play = rec_play
 						$('#wait').show();
-						opp_play = rec_play
 						Status();
 					})
 					function Status(){
@@ -131,7 +138,7 @@
 				// 5. user quits
 					$("#quit").click(function (){
 						quit = {room: room_id}
-						io.emit('play', quit)
+						io.emit('quit', quit)
 						$('#game').hide();
 						$('#challenge').show();		
 					})
