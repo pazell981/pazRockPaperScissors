@@ -93,7 +93,6 @@
 						Status();
 					})
 					io.on('round',function(rec_play){
-						console.log(rec_play)
 						opp_play = rec_play
 						$('#wait').show();
 						Status();
@@ -101,6 +100,7 @@
 					function Status(){
 						if(play.play!='' && opp_play!=null){
 							console.log('check has begun')
+							console.log(play.play, opp_play)
 							if(play.play=='Rock'){
 									if(opp_play=='Paper'){
 										status = "Round " + round + ": " + opponent + " wins!";
