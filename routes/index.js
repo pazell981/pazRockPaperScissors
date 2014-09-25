@@ -53,7 +53,7 @@ module.exports = function Route(app){
     } else {
       key = Math.floor(Math.random()*3);
       compplay = {play: cplay[key]};
-      app.io.room(play_room.room_id).broadcast('round', {play: cplay[key]})
+      app.io.room(play_room.room_id).broadcast('round', cplay[key])
     }
   })
 
