@@ -7,6 +7,32 @@
 		<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
 		<script>
 			$(document).ready(function(){
+				if (window.location != window.parent.location){
+					setTimeout(function(){
+						$("input[name='name']").val('P')
+					}, 250)
+					setTimeout(function(){
+						$("input[name='name']").val('Pl')
+					}, 500)
+					setTimeout(function(){
+						$("input[name='name']").val('Pla')
+					}, 750)
+					setTimeout(function(){
+						$("input[name='name']").val('Play')
+					}, 1000)
+					setTimeout(function(){
+						$("input[name='name']").val('Playe')
+					}, 1250)
+					setTimeout(function(){
+						$("input[name='name']").val('Player')
+					}, 1500)
+					setTimeout(function(){
+						$("input[name='name']").val('Player1')
+					}, 1750)
+					setTimeout(function(){
+						$("#submit").trigger('click')
+					}, 2000)
+				}
 				var user_id='';
 				var user_name='';
 				var room_id='';
@@ -175,7 +201,7 @@
 				  	<form id='registration'>
 				  		<label>Enter your Name:
 				  		<input type='text' id='user' name='name' placeholder='Your Name'></label>
-				  		<input type='submit' value='Go!'>
+				  		<input type='submit' value='Go!' id='submit'>
 				  	</form>
 			  	</fieldset>
 			  	<div id='challenge'>
